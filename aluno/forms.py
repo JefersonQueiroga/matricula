@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Aluno
+from .models import Aluno,Cidade
 
 class AlunoForm(ModelForm):
 
@@ -14,4 +14,14 @@ class AlunoForm(ModelForm):
             'cidade': forms.Select(attrs={'class': 'form-control' }),
             'curso': forms.Select(attrs={'class': 'form-control' }),
             'foto': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+class CidadeForm(ModelForm):
+
+    class Meta:
+        model = Cidade
+        fields = '__all__'
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'sigla_estado': forms.TextInput(attrs={'class': 'form-control'}),
         }
