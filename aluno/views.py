@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .models import Aluno,Curso,Cidade
-from .forms import AlunoForm
+from .forms import AlunoForm,CidadeForm
 
 def aluno_editar(request,id):
     aluno = get_object_or_404(Aluno,id=id)
@@ -56,16 +56,42 @@ def index(request):
 
 
 def curso_listar(request):
+       
     cursos = Curso.objects.all()
     context = {
         'cursos': cursos
     }
     return render(request, "aluno/curso_listar.html", context)
 
+# fazer 2 coisa: criando o form e cadastrando as informacoes
+# form.
 def cidade_criar(request):
-    form = CidadeForm()
+      
+    if request.method == "POST":
+        form = CidadeForm(request.POST) # pegando os dados do req para o formulario
+        if form.is_valid(): # validando se os dados estao correto.
+           form.save() # salvando os dados do formulario no model.
+           form = CidadeForm() #limpar form
+           return redirect('cidade_listar') 
+    else:
+        form = CidadeForm()
+    
     context= {
         'form': form
     }
  
     return render(request, "cidade/form.html",context)
+
+#função para pegar as cidades e mandar para página de listar
+def cidade_listar(request):    
+    cidades = Cidade.objects.all()
+    context={
+        'cidades': cidades
+    }
+    return render(request,'cidade/cidade_lista.html',context)
+
+
+def cidade_remover(request,id):
+    cidade= get_object_or_404(Cidade,id=id)
+    cidade.delete()
+    return redirect('cidade_listar')    
